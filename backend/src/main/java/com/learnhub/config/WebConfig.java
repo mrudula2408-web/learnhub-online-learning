@@ -1,0 +1,29 @@
+package com.learnhub.config;
+
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+/**
+ * Web MVC Configuration.
+ *
+ * CORS (Cross-Origin Resource Sharing) must be configured because:
+ * - React dev server runs on http://localhost:5173
+ * - Spring Boot runs on http://localhost:8081
+ * - Browsers block cross-origin requests by default
+ * This config allows the React frontend to call our API.
+ */
+@Configuration
+public class WebConfig implements WebMvcConfigurer {
+
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/api/**")   // Apply CORS to all /api/ endpoints
+                .allowedOrigins("http://localhost:5173")  // React dev server
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                // IMPORTANT: allowCredentials must be true for session cookies to work
+                .allowCredentials(true)
+                .maxAge(3600); // Cache CORS preflight response for 1 hour
+    }
+}

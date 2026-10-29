@@ -1,0 +1,39 @@
+# =====================================================
+# LearnHub Backend Configuration - Example Template
+# Rename this or set the DB_PASSWORD environment variable
+# =====================================================
+
+# Server runs on port 8081
+server.port=8081
+
+# =====================================================
+# MySQL DataSource Configuration
+# Set the DB_PASSWORD environment variable in PowerShell:
+#   $env:DB_PASSWORD="your_actual_mysql_password"
+# Or update the password field below for local testing.
+# =====================================================
+spring.datasource.url=jdbc:mysql://localhost:3306/learnhub_db?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+spring.datasource.username=root
+spring.datasource.password=${DB_PASSWORD:${LEARNHUB_DB_PASSWORD:your_password_here}}
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+# =====================================================
+# JPA / Hibernate Settings
+# =====================================================
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=false
+spring.jpa.properties.hibernate.format_sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+
+# =====================================================
+# HTTP Session Settings
+# =====================================================
+server.servlet.session.timeout=60m
+server.servlet.session.cookie.http-only=true
+server.servlet.session.cookie.same-site=lax
+
+# =====================================================
+# Logging
+# =====================================================
+logging.level.com.learnhub=INFO
+logging.level.org.springframework.web=INFO
