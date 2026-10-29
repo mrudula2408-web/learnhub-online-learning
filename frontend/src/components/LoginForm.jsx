@@ -81,9 +81,10 @@ function LoginForm({ onSuccess }) {
           className="btn btn-secondary btn-sm"
           style={{ width: '100%', fontSize: '0.85rem' }}
           onClick={() => {
-            setEmail('student@learnhub.edu');
-            setPassword('LearnHub2025!');
+            setEmail('student@nextlearn.edu');
+            setPassword('NextLearn2025!');
           }}
+
         >
           ⚡ Quick Demo Account (Alex Mercer)
         </button>

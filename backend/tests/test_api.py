@@ -9,7 +9,7 @@ from app.main import app
 from app.services.seed import seed_database
 
 # Use in-memory SQLite for high-speed isolated tests
-TEST_DATABASE_URL = "sqlite:///./test_learnhub.db"
+TEST_DATABASE_URL = "sqlite:///./test_nextlearn.db"
 
 test_engine = create_engine(TEST_DATABASE_URL, connect_args={"check_same_thread": False})
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=test_engine)
@@ -31,9 +31,9 @@ def setup_db():
     db.close()
     yield
     Base.metadata.drop_all(bind=test_engine)
-    if os.path.exists("./test_learnhub.db"):
+    if os.path.exists("./test_nextlearn.db"):
         try:
-            os.remove("./test_learnhub.db")
+            os.remove("./test_nextlearn.db")
         except Exception:
             pass
 
@@ -44,6 +44,7 @@ def test_health_check():
     assert response.status_code == 200
     data = response.json()
     assert data["status"] == "ok"
+    assert data["app"] == "NextLearn API"
     assert data["database"] == "connected"
 
 def test_courses_listing():
@@ -56,7 +57,7 @@ def test_courses_listing():
 def test_user_registration_and_login():
     # 1. Register new student
     reg_payload = {
-        "email": "tester@learnhub.edu",
+        "email": "tester@nextlearn.edu",
         "password": "Password123!",
         "full_name": "Test Student"
     }
@@ -64,7 +65,7 @@ def test_user_registration_and_login():
     assert reg_res.status_code == 201
     reg_data = reg_res.json()
     assert "access_token" in reg_data
-    assert reg_data["user"]["email"] == "tester@learnhub.edu"
+    assert reg_data["user"]["email"] == "tester@nextlearn.edu"
 
     # 2. Duplicate registration should fail
     dup_res = client.post("/api/auth/register", json=reg_payload)
@@ -72,12 +73,13 @@ def test_user_registration_and_login():
 
     # 3. Login
     login_payload = {
-        "email": "tester@learnhub.edu",
+        "email": "tester@nextlearn.edu",
         "password": "Password123!"
     }
     login_res = client.post("/api/auth/login", json=login_payload)
     assert login_res.status_code == 200
     token = login_res.json()["access_token"]
+
 
     # 4. Auth me
     me_res = client.get("/api/auth/me", headers={"Authorization": f"Bearer {token}"})
@@ -86,8 +88,9 @@ def test_user_registration_and_login():
 
 def test_course_flow_and_quiz_unlocking():
     # Login as student
-    login_res = client.post("/api/auth/login", json={"email": "tester@learnhub.edu", "password": "Password123!"})
+    login_res = client.post("/api/auth/login", json={"email": "tester@nextlearn.edu", "password": "Password123!"})
     token = login_res.json()["access_token"]
+
     headers = {"Authorization": f"Bearer {token}"}
 
     # 1. Get course details

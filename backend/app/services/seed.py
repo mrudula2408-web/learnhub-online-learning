@@ -338,16 +338,19 @@ def seed_database(db: Session):
         return
 
     # Seed demo student account for instant faculty evaluation
-    demo_user = db.query(User).filter(User.email == "student@learnhub.edu").first()
+    demo_user = db.query(User).filter(
+        (User.email == "student@nextlearn.edu") | (User.email == "student@learnhub.edu")
+    ).first()
     if not demo_user:
         demo_user = User(
-            email="student@learnhub.edu",
-            hashed_password=get_password_hash("LearnHub2025!"),
+            email="student@nextlearn.edu",
+            hashed_password=get_password_hash("NextLearn2025!"),
             full_name="Alex Mercer (Demo Student)",
             role="student"
         )
         db.add(demo_user)
         db.commit()
+
 
     for c_data in SAMPLE_COURSES:
         course = Course(

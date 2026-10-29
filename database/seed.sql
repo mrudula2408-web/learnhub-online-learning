@@ -1,7 +1,8 @@
 -- ==============================================================================
--- LearnHub Database Initial Seed SQL (Supabase PostgreSQL Compatible)
+-- NextLearn Database Initial Seed SQL (Supabase PostgreSQL Compatible)
 -- Populates courses, modules with official educational resources, and quizzes
 -- ==============================================================================
+
 
 -- 1. Insert Courses
 INSERT INTO courses (id, title, slug, description, short_description, instructor_name, instructor_role, category, difficulty, duration_hours, thumbnail_url, is_published)

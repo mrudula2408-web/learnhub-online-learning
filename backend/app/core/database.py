@@ -5,10 +5,14 @@ from app.core.config import settings
 db_url = settings.DATABASE_URL
 if db_url.startswith("postgres://"):
     db_url = db_url.replace("postgres://", "postgresql://", 1)
+if db_url.startswith("mysql://"):
+    db_url = db_url.replace("mysql://", "mysql+pymysql://", 1)
 
 connect_args = {}
 if "sqlite" in db_url:
     connect_args = {"check_same_thread": False}
+elif "mysql" in db_url:
+    connect_args = {"ssl": {"ssl_mode": "PREFERRED"}}
 
 engine = create_engine(
     db_url,

@@ -1,7 +1,8 @@
 -- ==============================================================================
--- LearnHub Database Schema (Supabase PostgreSQL Compatible)
+-- NextLearn Database Schema (Supabase PostgreSQL Compatible)
 -- Clean relational design for users, courses, modules, progress, quizzes, and enrollments
 -- ==============================================================================
+
 
 -- 1. USERS TABLE
 CREATE TABLE IF NOT EXISTS users (

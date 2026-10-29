@@ -25,7 +25,8 @@ function RegisterPage({ onRegister }) {
         <div className="auth-card-header">
           <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🎓</div>
           <h1>Create Account</h1>
-          <p>Join LearnHub and start learning today</p>
+          <p>Join NextLearn and start learning today</p>
+
         </div>
 
         <RegisterForm onSuccess={handleSuccess} />

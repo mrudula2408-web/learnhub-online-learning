@@ -28,8 +28,9 @@ function HomePage({ student }) {
 
         <h1>
           Learn Smarter with<br />
-          <span className="gradient-text">LearnHub</span>
+          <span className="gradient-text">NextLearn</span>
         </h1>
+
 
         <p className="hero-description">
           Access high-quality courses, take interactive quizzes, and track your
@@ -120,8 +121,9 @@ function HomePage({ student }) {
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
           <h2 className="section-title text-center" style={{ justifyContent: 'center', marginBottom: '2.5rem' }}>
-            ✨ Why Choose LearnHub?
+            ✨ Why Choose NextLearn?
           </h2>
+
           <div className="course-grid">
             {[
               { icon: '🎓', title: 'Expert-Led Courses', desc: 'Learn from experienced instructors with real-world knowledge in various technology domains.' },

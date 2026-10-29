@@ -1,5 +1,5 @@
 /**
- * api.js — Base API utility module for LearnHub
+ * api.js — Base API utility module for NextLearn
  * 
  * Interacts with the Python FastAPI REST backend.
  * Automatically injects the JWT Bearer token from localStorage.
@@ -16,7 +16,7 @@ const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
  * @returns {Promise<any>}  - parsed JSON response
  */
 async function apiFetch(endpoint, options = {}) {
-  const token = localStorage.getItem('learnhub_token');
+  const token = localStorage.getItem('nextlearn_token') || localStorage.getItem('learnhub_token');
   
   const headers = {
     'Content-Type': 'application/json',
@@ -31,14 +31,15 @@ async function apiFetch(endpoint, options = {}) {
       headers,
     });
   } catch (err) {
-    throw new Error(`Cannot reach LearnHub API at ${BASE_URL}. Please check network connection or verify the backend service is running.`);
+    throw new Error(`Cannot reach NextLearn API at ${BASE_URL}. Please check network connection or verify the backend service is running.`);
   }
 
   // Handle 401 Unauthorized
   if (response.status === 401 && endpoint !== '/auth/login' && endpoint !== '/auth/register') {
-    localStorage.removeItem('learnhub_token');
-    localStorage.removeItem('learnhub_user');
+    localStorage.removeItem('nextlearn_token');
+    localStorage.removeItem('nextlearn_user');
   }
+
 
   // Parse response
   let data = null;

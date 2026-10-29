@@ -21,7 +21,8 @@ function LoginPage({ onLogin }) {
         <div className="auth-card-header">
           <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🔐</div>
           <h1>Welcome Back</h1>
-          <p>Sign in to your LearnHub account</p>
+          <p>Sign in to your NextLearn account</p>
+
         </div>
 
         <LoginForm onSuccess={handleSuccess} />

@@ -1,4 +1,4 @@
-# LearnHub — Modern Online Learning Platform
+# NextLearn — Modern Online Learning Platform
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115.6-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/React-18.3.1-61DAFB.svg?logo=react&logoColor=black)](https://react.dev)
@@ -58,7 +58,7 @@ A production-grade, full-stack online learning platform engineered for college c
 ## 📁 Repository Structure
 
 ```
-learnhub/
+nextlearn/
 ├── frontend/                     # React + Vite Client Application
 │   ├── src/
 │   │   ├── assets/               # Images and SVGs
@@ -97,7 +97,7 @@ learnhub/
 
 ### 1. Cloud Database Setup (Supabase) — ~1 Minute
 1. Sign in to [Supabase](https://supabase.com) (free tier).
-2. Create a new project called `learnhub`.
+2. Create a new project called `nextlearn`.
 3. Open the **SQL Editor** tab from the left sidebar.
 4. Copy and paste the contents of `database/schema.sql`, then click **Run**.
 5. Copy and paste the contents of `database/seed.sql`, then click **Run**.
@@ -120,7 +120,7 @@ learnhub/
    - `SECRET_KEY`: A random 32-character secret key.
    - `ALLOWED_ORIGINS`: `*` (or your Vercel URL).
 6. Click **Deploy Web Service**. Your public backend will be live at:
-   `https://learnhub-api.onrender.com` (Health check at `/health`).
+   `https://nextlearn-api.onrender.com` (Health check at `/health`).
 
 ### 3. Frontend Deployment (Vercel) — ~1 Minute
 1. Sign in to [Vercel](https://vercel.com).
@@ -131,7 +131,7 @@ learnhub/
    - **Build Command**: `npm run build`
    - **Output Directory**: `dist`
 4. Add Environment Variable:
-   - `VITE_API_URL`: Your Render backend URL + `/api` (e.g., `https://learnhub-api.onrender.com/api`).
+   - `VITE_API_URL`: Your Render backend URL + `/api` (e.g., `https://nextlearn-api.onrender.com/api`).
 5. Click **Deploy**. Your public platform will be instantly live on a public `*.vercel.app` URL.
 
 ---
@@ -165,22 +165,17 @@ npm run dev
 
 ## 🧪 Automated Testing
 
-Run the comprehensive integration test suite to verify all endpoints, quiz locking rules, and grading:
+Run the comprehensive integration test suite:
 ```bash
 cd backend
 pytest -v tests/test_api.py
 ```
-Test Coverage:
-- `test_health_check`: Verifies server up-time and database readiness.
-- `test_courses_listing`: Validates catalog retrieval and search filters.
-- `test_user_registration_and_login`: Verifies password hashing, duplicate detection, and JWT issue.
-- `test_course_flow_and_quiz_unlocking`: Verifies 100% module completion enforcement, tamper-prevention, quiz grading, and dashboard statistics updates.
 
 ---
 
 ## 🎓 Faculty Evaluation Credentials
 
 For rapid faculty viva and assessment, a pre-seeded student account is available:
-- **Email**: `student@learnhub.edu`
-- **Password**: `LearnHub2025!`
+- **Email**: `student@nextlearn.edu`
+- **Password**: `NextLearn2025!`
 - *Alternative*: Any faculty member can register their own custom email and password in 5 seconds to test clean registration and state persistence.

@@ -26,8 +26,9 @@ function Navbar({ student, onLogout }) {
       <div className="navbar-inner">
         {/* Brand / Logo */}
         <NavLink to={student ? "/" : "/login"} className="navbar-brand">
-          🎓 LearnHub
+          ⚡ NextLearn
         </NavLink>
+
 
         {/* Navigation Links (visible when logged in) */}
         {student && (

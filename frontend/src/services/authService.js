@@ -17,7 +17,7 @@ const authService = {
     });
 
     if (data.access_token) {
-      localStorage.setItem('learnhub_token', data.access_token);
+      localStorage.setItem('nextlearn_token', data.access_token);
       const student = {
         studentId: data.user.id,
         id: data.user.id,
@@ -25,7 +25,7 @@ const authService = {
         email: data.user.email,
         role: data.user.role,
       };
-      localStorage.setItem('learnhub_user', JSON.stringify(student));
+      localStorage.setItem('nextlearn_user', JSON.stringify(student));
       return student;
     }
     return data;
@@ -42,7 +42,7 @@ const authService = {
     });
 
     if (data.access_token) {
-      localStorage.setItem('learnhub_token', data.access_token);
+      localStorage.setItem('nextlearn_token', data.access_token);
       const student = {
         studentId: data.user.id,
         id: data.user.id,
@@ -50,7 +50,7 @@ const authService = {
         email: data.user.email,
         role: data.user.role,
       };
-      localStorage.setItem('learnhub_user', JSON.stringify(student));
+      localStorage.setItem('nextlearn_user', JSON.stringify(student));
       return student;
     }
     return data;
@@ -58,6 +58,8 @@ const authService = {
 
   /** Log out the current session */
   logout: async () => {
+    localStorage.removeItem('nextlearn_token');
+    localStorage.removeItem('nextlearn_user');
     localStorage.removeItem('learnhub_token');
     localStorage.removeItem('learnhub_user');
     return { success: true };
@@ -65,7 +67,7 @@ const authService = {
 
   /** Get the currently logged-in student's info from token verification */
   getMe: async () => {
-    const token = localStorage.getItem('learnhub_token');
+    const token = localStorage.getItem('nextlearn_token') || localStorage.getItem('learnhub_token');
     if (!token) {
       throw new Error('No active session token');
     }
@@ -77,9 +79,10 @@ const authService = {
       email: user.email,
       role: user.role,
     };
-    localStorage.setItem('learnhub_user', JSON.stringify(student));
+    localStorage.setItem('nextlearn_user', JSON.stringify(student));
     return student;
   },
+
 };
 
 export default authService;

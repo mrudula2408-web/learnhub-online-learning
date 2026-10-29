@@ -4,7 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import Session
 from sqlalchemy import text
 from app.core.config import settings
-from app.core.database import engine, Base, get_db
+from app.core.database import engine, Base, get_db, SessionLocal
 from app.api import auth, courses, enrollments, progress, quizzes, dashboard, compat
 
 from app.services.seed import seed_database
@@ -29,9 +29,10 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
-    description="LearnHub — Modern Online Learning Platform API for Academic Case Study & Faculty Evaluation",
+    description="NextLearn — Modern Online Learning Platform API for Academic Case Study & Faculty Evaluation",
     lifespan=lifespan
 )
+
 
 # Configure CORS
 app.add_middleware(
@@ -44,6 +45,7 @@ app.add_middleware(
 
 # Health check endpoint
 @app.get("/health", tags=["Health"])
+@app.get("/api/health", tags=["Health"])
 def health_check(db: Session = Depends(get_db)):
     db_status = "connected"
     try:
