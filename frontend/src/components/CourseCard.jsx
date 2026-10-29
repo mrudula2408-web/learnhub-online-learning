@@ -25,15 +25,15 @@ function CourseCard({ course, index = 0, onViewDetails, onEnroll, isEnrolled, ch
       {/* Card body */}
       <div className="course-card-body">
         <h2 className="course-title">{course.title}</h2>
-        <p className="course-description">{course.description}</p>
+        <p className="course-description">{course.description || course.short_description}</p>
 
         {/* Meta info: instructor and duration */}
         <div className="course-meta">
           <span className="course-meta-item">
-            👨‍🏫 {course.instructor}
+            👨‍🏫 {course.instructor || course.instructor_name || 'Prof. Faculty'}
           </span>
           <span className="course-meta-item">
-            ⏱️ {course.duration}
+            ⏱️ {course.duration || `${course.duration_hours || 12} hrs`}
           </span>
         </div>
       </div>

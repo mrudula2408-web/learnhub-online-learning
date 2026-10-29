@@ -22,7 +22,7 @@ function AlertMessage({ type = 'info', message, onClose }) {
   return (
     <div className={`alert alert-${type}`} role="alert">
       <span className="alert-icon">{ICONS[type]}</span>
-      <span>{message}</span>
+      <span>{typeof message === 'object' ? (message.msg || message.message || JSON.stringify(message)) : message}</span>
       {onClose && (
         <button
           onClick={onClose}

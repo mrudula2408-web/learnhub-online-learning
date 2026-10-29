@@ -99,7 +99,12 @@ class CourseDetailOut(BaseModel):
 # --- ENROLLMENT SCHEMAS ---
 
 class EnrollmentCreate(BaseModel):
-    course_id: int
+    course_id: Optional[int] = None
+    courseId: Optional[int] = None
+
+    @property
+    def target_course_id(self) -> Optional[int]:
+        return self.course_id or self.courseId
 
 class EnrollmentOut(BaseModel):
     id: int

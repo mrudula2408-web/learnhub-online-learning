@@ -9,7 +9,7 @@ const enrollmentService = {
   enroll: (courseId) =>
     apiFetch('/enrollments', {
       method: 'POST',
-      body: JSON.stringify({ courseId }),
+      body: JSON.stringify({ course_id: courseId, courseId }),
     }),
 
   /** Get all courses the logged-in student is enrolled in */

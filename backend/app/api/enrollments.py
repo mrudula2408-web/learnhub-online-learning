@@ -14,7 +14,10 @@ def enroll_course(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    course = db.query(Course).filter(Course.id == enroll_in.course_id).first()
+    cid = enroll_in.target_course_id
+    if not cid:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="course_id or courseId is required")
+    course = db.query(Course).filter(Course.id == cid).first()
     if not course:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Course not found")
 

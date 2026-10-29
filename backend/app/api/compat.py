@@ -342,6 +342,40 @@ def submit_quiz_compat(
     }
 
 
+@router.post("/enrollments")
+def enroll_course_compat(
+    payload: Dict[str, Any] = Body(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    course_id = payload.get("courseId") or payload.get("course_id") or payload.get("id")
+    if not course_id:
+        raise HTTPException(status_code=400, detail="courseId or course_id is required")
+
+    course = db.query(Course).filter(Course.id == int(course_id)).first()
+    if not course:
+        raise HTTPException(status_code=404, detail="Course not found")
+
+    existing = db.query(Enrollment).filter(
+        Enrollment.user_id == current_user.id,
+        Enrollment.course_id == course.id
+    ).first()
+
+    if not existing:
+        existing = Enrollment(user_id=current_user.id, course_id=course.id, status="active")
+        db.add(existing)
+        db.commit()
+        db.refresh(existing)
+
+    return {
+        "enrollmentId": existing.id,
+        "id": existing.id,
+        "courseId": course.id,
+        "status": existing.status,
+        "message": f"Successfully enrolled in {course.title}"
+    }
+
+
 @router.get("/enrollments/my")
 def get_my_enrollments_compat(
     db: Session = Depends(get_db),

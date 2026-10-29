@@ -51,7 +51,22 @@ async function apiFetch(endpoint, options = {}) {
   }
 
   if (!response.ok) {
-    const errorMsg = data?.detail || data?.message || (typeof data === 'string' ? data : `Request failed with status ${response.status}`);
+    let errorMsg = 'An unexpected error occurred';
+    if (data?.detail) {
+      if (typeof data.detail === 'string') {
+        errorMsg = data.detail;
+      } else if (Array.isArray(data.detail)) {
+        errorMsg = data.detail.map(item => (typeof item === 'object' ? item.msg || item.detail : item)).join(', ');
+      } else if (typeof data.detail === 'object') {
+        errorMsg = data.detail.msg || data.detail.message || JSON.stringify(data.detail);
+      }
+    } else if (data?.message) {
+      errorMsg = typeof data.message === 'string' ? data.message : JSON.stringify(data.message);
+    } else if (typeof data === 'string') {
+      errorMsg = data;
+    } else {
+      errorMsg = `Request failed with status ${response.status}`;
+    }
     throw new Error(errorMsg);
   }
 
