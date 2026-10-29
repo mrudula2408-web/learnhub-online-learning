@@ -6,8 +6,8 @@
  */
 
 // In development: http://localhost:8000/api
-// In production: configured via VITE_API_URL on Vercel
-const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
+// In production: configured via VITE_API_URL or defaults to live Render backend
+const BASE_URL = import.meta.env.VITE_API_URL || 'https://learnhub-online-learning.onrender.com/api';
 
 /**
  * Generic fetch wrapper with JWT Bearer authentication.
