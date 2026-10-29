@@ -74,7 +74,22 @@ function LoginForm({ onSuccess }) {
       >
         {loading ? '⏳ Signing In...' : '🔐 Sign In'}
       </button>
+
+      <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+        <button
+          type="button"
+          className="btn btn-secondary btn-sm"
+          style={{ width: '100%', fontSize: '0.85rem' }}
+          onClick={() => {
+            setEmail('student@learnhub.edu');
+            setPassword('LearnHub2025!');
+          }}
+        >
+          ⚡ Quick Demo Account (Alex Mercer)
+        </button>
+      </div>
     </form>
+
   );
 }
 

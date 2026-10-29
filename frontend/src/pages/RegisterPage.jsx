@@ -5,13 +5,19 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import RegisterForm from '../components/RegisterForm.jsx';
 
-function RegisterPage() {
+function RegisterPage({ onRegister }) {
   const navigate = useNavigate();
 
-  // After successful registration, redirect to login
-  const handleSuccess = () => {
-    setTimeout(() => navigate('/login'), 2000);
+  // After successful registration, log in or redirect
+  const handleSuccess = (studentData) => {
+    if (onRegister && studentData?.name) {
+      onRegister(studentData);
+      navigate('/dashboard');
+    } else {
+      setTimeout(() => navigate('/login'), 1500);
+    }
   };
+
 
   return (
     <div className="auth-page">

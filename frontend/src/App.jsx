@@ -77,7 +77,8 @@ function App() {
       <Routes>
         {/* Authentication routes */}
         <Route path="/login"    element={!student ? <LoginPage onLogin={handleLogin} /> : <Navigate to="/" replace />} />
-        <Route path="/register" element={!student ? <RegisterPage /> : <Navigate to="/" replace />} />
+        <Route path="/register" element={!student ? <RegisterPage onRegister={handleLogin} /> : <Navigate to="/" replace />} />
+
 
         {/* Protected routes — visitors must be logged in */}
         <Route path="/" element={student ? <HomePage student={student} /> : <Navigate to="/login" replace />} />

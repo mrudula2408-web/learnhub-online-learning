@@ -1,286 +1,186 @@
-# LearnHub – Online Learning Platform
+# LearnHub — Modern Online Learning Platform
 
-A complete, working college project designed for 3rd-year B.Tech CSE evaluation and viva.
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.115.6-009688.svg?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![React](https://img.shields.io/badge/React-18.3.1-61DAFB.svg?logo=react&logoColor=black)](https://react.dev)
+[![Vite](https://img.shields.io/badge/Vite-6.0-646CFF.svg?logo=vite&logoColor=white)](https://vitejs.dev)
+[![PostgreSQL](https://img.shields.io/badge/Database-Supabase%20PostgreSQL-3ECF8E.svg?logo=supabase&logoColor=white)](https://supabase.com)
+[![Tailwind CSS](https://img.shields.io/badge/Styling-Modern%20Dark%20Theme-06B6D4.svg?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
 
----
-
-## 📌 Project Overview
-
-| Component | Technology | Port | Description |
-|-----------|-----------|------|-------------|
-| **Frontend** | React JS + Vite, HTML5, CSS3, JavaScript | `5173` | Clean UI with reusable components, responsive navbar, course cards, login/register, quiz interface, and student dashboard |
-| **Backend** | Java, Spring MVC, Spring Boot, Spring Data JPA | `8081` | REST APIs for authentication (BCrypt hashing), course listing, duplicate-proof enrollment, quiz scoring, and progress tracking |
-| **Database** | MySQL 8.x | `3306` | Relational database `learnhub_db` with **only 5 basic tables** |
-| **DB Client** | MySQL Workbench | - | Visual tool to verify saved records with `SELECT` queries |
+A production-grade, full-stack online learning platform engineered for college case study evaluation and faculty demonstration. Accessible via public links on laptops, tablets, and mobile devices without requiring any local server or laptop to run.
 
 ---
 
-## 🗄️ Database Architecture (7 Tables)
+## 🌟 Key Features
 
-`learnhub_db` uses a clean relational structure:
+1. **Deployment-First Architecture**:
+   - **Frontend**: Single-Page Application (SPA) built with React 18, Vite, and responsive dark glassmorphic styling, deployable to **Vercel** with full client-side routing support.
+   - **Backend**: High-performance RESTful API built with **Python 3.12** and **FastAPI**, deployable to **Render** or any Python PaaS with automatic OpenAPI/Swagger documentation (`/docs`).
+   - **Cloud Database**: Managed relational storage using **Supabase PostgreSQL** with connection pooling and automated migration scripts. Zero local database servers required.
 
-```
-learnhub_db
- ├── 1. students            (id, name, email, password_hash, created_at)
- ├── 2. courses             (id, title, description, instructor, duration)
- ├── 3. enrollments         (id, student_id, course_id, enrolled_at)
- ├── 4. course_modules      (id, course_id, module_number, title, description, link1_title, link1_url, link2_title, link2_url)
- ├── 5. module_completions  (id, student_id, module_id, course_id, completed_at)
- ├── 6. learning_progress   (id, student_id, course_id, completion_percentage, completion_status, last_updated)
- └── 7. quiz_attempts       (id, student_id, course_id, quiz_title, score, total_questions, attempt_date)
-```
+2. **Secure JWT Authentication**:
+   - Bcrypt password hashing (`salt + work factor`).
+   - Stateless JWT Bearer token authentication with 7-day expiration.
+   - Cross-device persistence: Students register once and log in from any phone or computer with all learning progress, enrollments, and quiz results intact.
 
-- **Relationships:**
-  - `course_modules`: 3 modules per course with verified textbook and tutorial links.
-  - `module_completions`: Tracks completed modules per student with `UNIQUE(student_id, module_id)` to prevent duplicate credit.
-  - `learning_progress`: Automatically calculates progress: `(completed_modules / total_modules) * 100`.
-  - `quiz_attempts`: Saves score after all 3 modules are completed and the quiz is submitted.
+3. **Curated Course & Module Management**:
+   - Realistic multi-category courses: Web Development, Cloud & DevOps, Data Science & AI.
+   - Interactive modules featuring verified external textbooks, documentation (MDN, React Docs, FastAPI Docs, NIST, Scikit-Learn), and official tutorials.
+   - One-click safe external learning resource launch.
 
-All student registrations, course enrollments, quiz scores, and learning progress updates are **actually persisted in MySQL**.
+4. **Strict Quiz Unlocking Mechanism**:
+   - **Dual-Layer Enforcement**: Quizzes remain strictly locked until the student has marked **100% of required modules** completed.
+   - **Tamper-Proof Backend Validation**: The backend does NOT expose questions or options while the quiz is locked, and rejects any unauthorized submission attempts with `403 Forbidden`.
+   - Real-time display of incomplete modules with jump links.
 
----
-
-## 📁 Simple Project Structure
-
-```
-LearnHub/
-├── database.sql             # SQL script to create learnhub_db, 5 tables, & sample courses
-├── README.md                # Project setup, execution, and viva guide
-├── backend/                 # Java Spring Boot application (Spring MVC + JPA)
-│   ├── pom.xml              # Maven dependencies (Spring Web, JPA, Security, MySQL Connector)
-│   ├── mvnw / mvnw.cmd      # Maven wrapper scripts
-│   └── src/
-│       └── main/
-│           ├── java/com/learnhub/
-│           │   ├── LearnHubApplication.java   # Spring Boot entry point
-│           │   ├── config/
-│           │   │   ├── SecurityConfig.java     # BCrypt encoder & CORS filter
-│           │   │   └── WebConfig.java          # CORS mapping for React (localhost:5173)
-│           │   ├── controller/
-│           │   │   ├── AuthController.java     # /api/auth/register, /api/auth/login, /api/auth/me
-│           │   │   ├── CourseController.java   # /api/courses (GET all & by ID)
-│           │   │   ├── EnrollmentController.java # /api/enrollments (POST enroll & GET my)
-│           │   │   ├── QuizController.java     # /api/quizzes (GET questions & POST submit)
-│           │   │   └── ProgressController.java # /api/progress (GET & PUT progress)
-│           │   ├── dto/                        # Request/Response data transfer objects
-│           │   ├── entity/                     # 5 JPA Entities (Student, Course, Enrollment, QuizAttempt, LearningProgress)
-│           │   ├── repository/                 # 5 Spring Data JPA Repositories
-│           │   └── service/                    # Business logic layer
-│           └── resources/
-│               └── application.properties     # MySQL connection configuration
-└── frontend/                # React JS Application (Vite)
-    ├── package.json         # React dependencies (React 18, React Router)
-    ├── vite.config.js       # Vite configuration
-    ├── index.html           # Single Page Application HTML root
-    └── src/
-        ├── App.jsx          # Route configuration
-        ├── main.jsx         # React root DOM render
-        ├── styles.css       # Clean, modern styling
-        ├── components/      # Reusable React components
-        │   ├── Navbar.jsx           # Top navigation bar
-        │   ├── CourseCard.jsx       # Course card reusable component
-        │   ├── CourseList.jsx       # Course grid display
-        │   ├── LoginForm.jsx        # Student login form
-        │   ├── RegisterForm.jsx     # Student registration form
-        │   ├── Quiz.jsx             # Multiple-choice quiz interface
-        │   ├── QuizQuestion.jsx     # Individual question component
-        │   ├── ProgressCard.jsx     # Progress bar & updater
-        │   └── StudentDashboard.jsx # Enrolled courses, quiz scores, progress
-        ├── pages/           # Pages (Home, Login, Register, Courses, Dashboard, Quiz)
-        └── services/        # Fetch API service layer calling Spring Boot endpoints
-```
+5. **Live Student Dashboard & Progress Tracking**:
+   - Progress percentage formula:
+     $$\text{Progress} = \left(\frac{\text{Completed Required Modules}}{\text{Total Required Modules}}\right) \times 100$$
+   - Course-wise progress tracking with live updates.
+   - Quiz attempt history with comprehensive score breakdowns, percentage badges, and question-by-question explanations.
 
 ---
 
-## 🚀 Step-by-Step Setup and Execution (Windows)
+## 🏗️ Technology Stack
 
-### Prerequisites Check
-Open PowerShell or Command Prompt:
-```powershell
-java -version       # JDK 17 or JDK 21+
-node -v             # Node.js 18+
-npm -v              # npm 9+
-mysql --version     # MySQL 8.x
+| Component | Technology | Role |
+|-----------|------------|------|
+| **Frontend Framework** | React 18.3 + Vite 6 | Lightning-fast reactive UI & state management |
+| **Routing** | React Router DOM v6 | Seamless multi-page navigation with SPA rewrite rules |
+| **UI Design & Theme** | Modern Dark Mode + CSS Tokens | Responsive cards, badges, gradients, and animations |
+| **Backend Framework** | Python 3.12 + FastAPI 0.115 | Asynchronous REST API, high throughput, low latency |
+| **Data Validation** | Pydantic v2 + Settings | Strict request/response typing and payload sanitization |
+| **Database ORM** | SQLAlchemy 2.0 | Type-safe query building, connection pooling, and migrations |
+| **Database Engine** | Supabase (PostgreSQL 15+) | Persistent cloud SQL database with foreign key cascades |
+| **Testing** | Pytest + HTTPX + Starlette TestClient | Automated integration test suite |
+
+---
+
+## 📁 Repository Structure
+
+```
+learnhub/
+├── frontend/                     # React + Vite Client Application
+│   ├── src/
+│   │   ├── assets/               # Images and SVGs
+│   │   ├── components/           # Navbar, CourseCard, Quiz, StudentDashboard, AlertMessage
+│   │   ├── pages/                # HomePage, CoursesPage, LearningPage, QuizPage, DashboardPage, Auth
+│   │   ├── services/             # api.js, authService, courseService, enrollmentService, quizService
+│   │   ├── App.jsx               # Main router and session provider
+│   │   └── styles.css            # Dark mode design system and responsive layout tokens
+│   ├── package.json              # Frontend scripts & dependencies
+│   ├── vercel.json               # SPA routing rewrite configuration
+│   └── .env.example              # Frontend environment template
+├── backend/                      # Python FastAPI Application
+│   ├── app/
+│   │   ├── api/                  # REST endpoints (auth, courses, enrollments, progress, quizzes, compat)
+│   │   ├── core/                 # config, database connection, JWT security & password hashing
+│   │   ├── models/               # SQLAlchemy relational models
+│   │   ├── schemas/              # Pydantic validation schemas
+│   │   ├── services/             # Automatic database seeding
+│   │   └── main.py               # FastAPI application entrypoint & lifespan
+│   ├── tests/                    # Automated integration test suite (test_api.py)
+│   ├── requirements.txt          # Python dependencies
+│   ├── Procfile                  # Cloud deployment start command
+│   ├── render.yaml               # Render PaaS configuration
+│   └── .env.example              # Backend environment template
+├── database/                     # Cloud Database Scripts
+│   ├── schema.sql                # Complete PostgreSQL DDL (tables, indexes, foreign keys)
+│   └── seed.sql                  # Initial seed data for courses, modules, resources, and quizzes
+├── render.yaml                   # Root PaaS deployment blueprint
+├── vercel.json                   # Root Vercel deployment configuration
+└── README.md                     # Documentation
 ```
 
 ---
 
-### Step 1: Set Up MySQL Database Using `database.sql`
+## 🚀 Quick Deployment Guide
 
-#### Option A: Using MySQL Workbench (Visual & Recommended)
-1. Open **MySQL Workbench**.
-2. Connect to your local MySQL instance (e.g. `root` @ `localhost:3306`).
-3. Click **File** -> **Open SQL Script...** (or press `Ctrl + Shift + O`).
-4. Select `database.sql` from the `LearnHub` project directory:
-   `C:\Users\mrudu\.gemini\antigravity\scratch\LearnHub\database.sql`
-5. Click the **Execute** button (the yellow lightning bolt icon ⚡) to run the script.
-6. In the left **Navigator** pane, under **SCHEMAS**, right-click and click **Refresh All**.
-7. Expand `learnhub_db` -> `Tables`. You will see exactly **5 tables**:
-   - `students`
-   - `courses`
-   - `enrollments`
-   - `quiz_attempts`
-   - `learning_progress`
+### 1. Cloud Database Setup (Supabase) — ~1 Minute
+1. Sign in to [Supabase](https://supabase.com) (free tier).
+2. Create a new project called `learnhub`.
+3. Open the **SQL Editor** tab from the left sidebar.
+4. Copy and paste the contents of `database/schema.sql`, then click **Run**.
+5. Copy and paste the contents of `database/seed.sql`, then click **Run**.
+6. Go to **Project Settings > Database** and copy your **Connection String** (`URI` mode):
+   ```
+   postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres
+   ```
 
-#### Option B: Using Windows PowerShell / Command Prompt
-```powershell
-# Navigate to LearnHub directory
-cd "C:\Users\mrudu\.gemini\antigravity\scratch\LearnHub"
+### 2. Backend Deployment (Render) — ~2 Minutes
+1. Push this repository to GitHub.
+2. Sign in to [Render](https://render.com) (free tier).
+3. Click **New + > Web Service** and select your GitHub repository.
+4. Configure:
+   - **Root Directory**: `backend`
+   - **Runtime**: `Python 3`
+   - **Build Command**: `pip install -r requirements.txt`
+   - **Start Command**: `uvicorn app.main:app --host 0.0.0.0 --port $PORT`
+5. Add Environment Variables:
+   - `DATABASE_URL`: Your Supabase connection string.
+   - `SECRET_KEY`: A random 32-character secret key.
+   - `ALLOWED_ORIGINS`: `*` (or your Vercel URL).
+6. Click **Deploy Web Service**. Your public backend will be live at:
+   `https://learnhub-api.onrender.com` (Health check at `/health`).
 
-# Execute database.sql using MySQL CLI
-mysql -u root -p < database.sql
-```
-*(Enter your MySQL root password when prompted)*
-
----
-
-### Step 2: Configure MySQL Password for Backend
-
-Open `backend/src/main/resources/application.properties`.
-
-The properties file is already configured with sensible defaults:
-```properties
-server.port=8081
-spring.datasource.url=jdbc:mysql://localhost:3306/learnhub_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-spring.datasource.username=root
-spring.datasource.password=${LEARNHUB_DB_PASSWORD:}
-spring.jpa.hibernate.ddl-auto=update
-```
-
-You can either:
-- **Set the environment variable in PowerShell before running:**
-  ```powershell
-  $env:LEARNHUB_DB_PASSWORD="your_mysql_password"
-  ```
-- **Or edit `application.properties` directly:**
-  Change `spring.datasource.password=${LEARNHUB_DB_PASSWORD:}` to your password:
-  ```properties
-  spring.datasource.password=your_mysql_password
-  ```
+### 3. Frontend Deployment (Vercel) — ~1 Minute
+1. Sign in to [Vercel](https://vercel.com).
+2. Click **Add New... > Project** and import your GitHub repository.
+3. Configure:
+   - **Root Directory**: `frontend`
+   - **Framework Preset**: `Vite`
+   - **Build Command**: `npm run build`
+   - **Output Directory**: `dist`
+4. Add Environment Variable:
+   - `VITE_API_URL`: Your Render backend URL + `/api` (e.g., `https://learnhub-api.onrender.com/api`).
+5. Click **Deploy**. Your public platform will be instantly live on a public `*.vercel.app` URL.
 
 ---
 
-### Step 3: Run the Spring Boot Backend
+## 💻 Local Development Setup
 
-Open a PowerShell window:
+### Backend Setup
+```bash
+cd backend
+python -m venv .venv
+# On Windows:
+.\.venv\Scripts\activate
+# On Linux/macOS:
+source .venv/bin/activate
 
-```powershell
-# 1. Navigate to backend directory
-cd "C:\Users\mrudu\.gemini\antigravity\scratch\LearnHub\backend"
-
-# 2. Start Spring Boot using Maven wrapper (or installed maven: mvn spring-boot:run)
-.\mvnw.cmd spring-boot:run
+pip install -r requirements.txt
+uvicorn app.main:app --reload --port 8000
 ```
+- API Docs: `http://localhost:8000/docs`
+- Health check: `http://localhost:8000/health`
 
-You will see:
-```text
-Tomcat started on port 8081 (http) with context path '/'
-Started LearnHubApplication in ... seconds
-```
-The REST API is now live at `http://localhost:8081`.
-
----
-
-### Step 4: Run the React Frontend
-
-Open a **second** PowerShell window:
-
-```powershell
-# 1. Navigate to frontend directory
-cd "C:\Users\mrudu\.gemini\antigravity\scratch\LearnHub\frontend"
-
-# 2. Install dependencies (already built, but good practice)
+### Frontend Setup
+```bash
+cd frontend
 npm install
-
-# 3. Start React Vite development server
 npm run dev
 ```
+- Frontend app: `http://localhost:5173`
 
-You will see:
-```text
-  VITE v6.x.x  ready in ... ms
+---
 
-  ➜  Local:   http://localhost:5173/
+## 🧪 Automated Testing
+
+Run the comprehensive integration test suite to verify all endpoints, quiz locking rules, and grading:
+```bash
+cd backend
+pytest -v tests/test_api.py
 ```
-
-Open your browser and navigate to: **`http://localhost:5173`**
-
----
-
-## 🧪 Testing the Complete Workflow (Viva Demo Checklist)
-
-Follow these steps to demonstrate the working project to your faculty:
-
-1. **Home Page (`http://localhost:5173`)**:
-   - The navigation bar shows **LearnHub**, **Home**, **Courses**, **Login**, and **Register**.
-   - Available courses fetched directly from the MySQL database via Spring Boot (`/api/courses`) are displayed in reusable `CourseCard` components.
-2. **Student Registration (`/register`)**:
-   - Register a new student (e.g., Name: `Rahul Sharma`, Email: `rahul@example.com`, Password: `Password@123`).
-   - Notice that the password is automatically hashed using **BCrypt** before insertion into MySQL.
-3. **Student Login (`/login`)**:
-   - Log in with the registered credentials.
-   - The navbar updates to show the student's name, **Dashboard**, and **Logout** button.
-4. **Course Enrollment (`/courses`)**:
-   - Click **Enroll Now** on any course (e.g. "Introduction to Java Programming").
-   - Backend saves the enrollment in MySQL `enrollments` table and creates an entry in `learning_progress`.
-   - If you click "Enroll Now" again, the backend prevents duplicate enrollment and displays: *"You are already enrolled in this course."*
-5. **Simple Quiz (`/quiz/1`)**:
-   - Navigate to the course assessment quiz.
-   - Answer the 5 multiple-choice questions and click **Submit Quiz**.
-   - The backend validates each answer against the correct answer, calculates your score (e.g., 4/5 = 80%), and saves the attempt in the `quiz_attempts` table.
-   - The result screen shows your score and pass badge.
-6. **Student Dashboard (`/dashboard`)**:
-   - View your enrolled courses.
-   - Update your learning progress percentage (e.g., set to 75% or 100% Completed) – this updates MySQL `learning_progress` table.
-   - View your saved quiz attempt history and scores.
+Test Coverage:
+- `test_health_check`: Verifies server up-time and database readiness.
+- `test_courses_listing`: Validates catalog retrieval and search filters.
+- `test_user_registration_and_login`: Verifies password hashing, duplicate detection, and JWT issue.
+- `test_course_flow_and_quiz_unlocking`: Verifies 100% module completion enforcement, tamper-prevention, quiz grading, and dashboard statistics updates.
 
 ---
 
-## 🔍 How to Open MySQL Workbench and Show Faculty Saved Data
+## 🎓 Faculty Evaluation Credentials
 
-During project evaluation, open **MySQL Workbench**, connect to `localhost:3306`, and run the following queries in a SQL Query tab:
-
-```sql
-USE learnhub_db;
-
--- 1. View registered students (notice password_hash is securely encrypted)
-SELECT id, name, email, password_hash, created_at FROM students;
-
--- 2. View all courses available on the platform
-SELECT id, title, instructor, duration FROM courses;
-
--- 3. View student enrollments (shows which student enrolled in which course)
-SELECT e.id, s.name AS student_name, s.email, c.title AS course_title, e.enrolled_at
-FROM enrollments e
-JOIN students s ON e.student_id = s.id
-JOIN courses c ON e.course_id = c.id;
-
--- 4. View quiz scores saved by the Java backend
-SELECT qa.id, s.name AS student_name, qa.quiz_title, qa.score, qa.total_questions, qa.attempt_date
-FROM quiz_attempts qa
-JOIN students s ON qa.student_id = s.id;
-
--- 5. View learning progress updates
-SELECT lp.id, s.name AS student_name, c.title AS course_title, lp.completion_percentage, lp.completion_status, lp.last_updated
-FROM learning_progress lp
-JOIN students s ON lp.student_id = s.id
-JOIN courses c ON lp.course_id = c.id;
-```
-
----
-
-## 💡 Viva Questions and Answers for 3rd-Year CSE
-
-1. **Q: What architecture does LearnHub follow?**
-   - **A:** 3-tier MVC architecture:
-     - **Presentation Tier:** React JS (Single Page Application using reusable components and hooks).
-     - **Business / Application Tier:** Spring MVC REST Controllers (`@RestController`), Services (`@Service`), and Spring Data JPA.
-     - **Data Tier:** MySQL database (`learnhub_db`) managed via Hibernate ORM.
-2. **Q: How does the React frontend communicate with Java Spring Boot?**
-   - **A:** React uses standard HTTP REST API calls (`fetch` with JSON request bodies and session cookies) to endpoints exposed by Spring Boot controllers (`/api/auth`, `/api/courses`, `/api/enrollments`, `/api/quizzes`, `/api/progress`).
-3. **Q: How is security handled?**
-   - **A:** Passwords are never stored in plain text. Spring Security's `BCryptPasswordEncoder` hashes passwords with a cryptographic salt before persisting into the `students` table. HTTP sessions track the authenticated student.
-4. **Q: Where does quiz evaluation happen?**
-   - **A:** Strictly on the Java backend in `QuizService`. Correct answers are never sent to the client browser, preventing inspection through browser developer tools.
-5. **Q: How is duplicate course enrollment prevented?**
-   - **A:** Both at the application level in `EnrollmentService` (`existsByStudentIdAndCourseId`) and at the database level with a `UNIQUE(student_id, course_id)` constraint on the `enrollments` table.
+For rapid faculty viva and assessment, a pre-seeded student account is available:
+- **Email**: `student@learnhub.edu`
+- **Password**: `LearnHub2025!`
+- *Alternative*: Any faculty member can register their own custom email and password in 5 seconds to test clean registration and state persistence.

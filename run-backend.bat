@@ -1,8 +1,12 @@
 @echo off
-title LearnHub Java Backend
+title LearnHub FastAPI Backend
 echo ========================================================
-echo Starting LearnHub Java Spring Boot Backend...
+echo Starting LearnHub Python FastAPI Backend on Port 8000...
 echo ========================================================
-cd /d "C:\Users\mrudu\.gemini\antigravity\scratch\LearnHub\backend"
-java -jar target\learnhub-backend-1.0.0.jar
+cd /d "%~dp0backend"
+if exist ".venv\Scripts\python.exe" (
+    .venv\Scripts\python.exe -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+) else (
+    python -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+)
 pause
