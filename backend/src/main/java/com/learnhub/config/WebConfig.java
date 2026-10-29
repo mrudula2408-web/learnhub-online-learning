@@ -18,12 +18,11 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")   // Apply CORS to all /api/ endpoints
-                .allowedOrigins("http://localhost:5173")  // React dev server
+        registry.addMapping("/api/**")
+                .allowedOriginPatterns("*")
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
-                // IMPORTANT: allowCredentials must be true for session cookies to work
                 .allowCredentials(true)
-                .maxAge(3600); // Cache CORS preflight response for 1 hour
+                .maxAge(3600);
     }
 }
